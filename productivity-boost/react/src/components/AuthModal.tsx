@@ -4,67 +4,41 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
+    DialogOverlay,
 } from "@/components/ui/dialog";
-import { modalController } from "@/hooks/modalController";
-import { Button } from "@/components/ui/button";
-import { GoogleLogin } from "@react-oauth/google";
-const AuthModal = () => {
-    const modal = modalController();
-    const onChange = () => {
-        if (modal.isOpen) {
-            modal.onClose();
-        }
-    };
+interface AuthModalProps {
+    children: React.ReactNode;
+    title: string;
+    tag: string;
+    open: boolean;
+    onOpenChange: () => any;
+}
+
+const AuthModal = ({
+    children,
+    title,
+    tag,
+    open,
+    onOpenChange,
+}: AuthModalProps) => {
+  
     return (
         <div className="w-full">
-            <Dialog open={modal.isOpen} onOpenChange={onChange}>
-                <DialogContent className="bg-white py-[100px] px-[100px]">
-                    <DialogHeader>
-                        <DialogTitle>
-                            <p className="text-[40px] text-blue-700 font-bold">
-                                Sign In
-                            </p>
-                            <p className="mt-[15px] mb-[40px]">
-                                Please login to your Account
-                            </p>
-                        </DialogTitle>
-                        <DialogDescription>
-                            <form className="flex flex-col items-center justify-center gap-[10px]">
-                                <label className="float-left w-full text-black">
-                                    Email
-                                </label>
-                                <input
-                                    type="email"
-                                    className="focus:border-transparent bg-gray-300/40 w-full p-1 rounded-md"
-                                />
-                                <label className="float-left w-full text-black">
-                                    Password
-                                </label>
-                                <input
-                                    type="password"
-                                    className="bg-gray-300/40 w-full p-1 rounded-md"
-                                />
-                                <Button className="rounded-xl text-base text-white mt-[20px] bg-blue-900 w-full hover:opacity-1">
-                                    Sign In
-                                </Button>
-                            </form>
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="flex flex-col justify-center items-center">
-                        <p>or</p>
-                        <div >
-                            <GoogleLogin width={300}
-                                onSuccess={(credentialResponse) => {
-                                    console.log(credentialResponse);
-                                }}
-                                onError={() => {
-                                    console.log("Login Failed");
-                                }}
-                            />
-                            ;
-                        </div>
-                    </div>
-                </DialogContent>
+            <Dialog open={open} onOpenChange={onOpenChange}>
+                <DialogOverlay className=" backdrop-blur-md fixed inset-0">
+                    <DialogContent className="bg-white py-[100px] px-[100px]  ">
+                        <DialogHeader>
+                            <DialogTitle>
+                                <h3 className="text-[40px] text-blue-700 font-bold">
+                                    {title}
+                                </h3>
+                                <p className="mt-[15px] mb-[40px]">{tag}</p>
+                            </DialogTitle>
+                            <DialogDescription>{children}</DialogDescription>
+                        </DialogHeader>
+                     
+                    </DialogContent>
+                </DialogOverlay>
             </Dialog>
         </div>
     );
