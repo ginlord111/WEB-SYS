@@ -26,7 +26,7 @@ const AuthModal = ({
         <div className="w-full">
             <Dialog open={open} onOpenChange={onOpenChange}>
                 <DialogOverlay className=" backdrop-blur-md fixed inset-0">
-                    <DialogContent className="bg-white py-[100px] px-[100px]  ">
+                    <DialogContent className="bg-white py-[80px] px-[80px] whitespace-nowrap  ">
                         <DialogHeader>
                             <DialogTitle>
                                 <h3 className="text-[40px] text-blue-700 font-bold">
@@ -34,7 +34,7 @@ const AuthModal = ({
                                 </h3>
                                 <p className="mt-[15px] mb-[40px]">{tag}</p>
                             </DialogTitle>
-                            <DialogDescription>{children}</DialogDescription>
+                            <DialogDescription >{children}</DialogDescription>
                         </DialogHeader>
                      
                     </DialogContent>

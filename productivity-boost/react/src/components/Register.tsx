@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useRef } from "react";
 import AuthModal from "./AuthModal";
 import { Button } from "./ui/button";
 import { modalController } from "@/hooks/modalController";
@@ -9,7 +9,10 @@ import { AxiosError } from "axios";
 import { User } from "@/types/types";
 import { GoogleLogin } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
+import { AiFillEye,AiFillEyeInvisible } from "react-icons/ai";
 const Register = () => {
+     const showPassword = useRef<HTMLInputElement>(null); 
+   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
     const [errorEmail, setErrorsEmail] = useState<any>()
     const [_, setCookies] = useCookies(["access_token"]);
     const [errors, setErrors] = useState<AxiosError | any>([]);
@@ -24,6 +27,10 @@ const Register = () => {
     const onChange = () => {
         if (isOpenRegister) {
             onCloseRegister();
+            if (showPassword.current) {
+                showPassword.current.type = 'password';
+              }
+              setIsPasswordVisible(false)
         }
     };
     const csrf = () => axiosClient.get("/sanctum/csrf-cookie");
@@ -45,6 +52,10 @@ const Register = () => {
             setUser({ fname: "", lname: "", email: "", password: "" });
             setErrors('');
             navigate("/dashboard");
+            setIsPasswordVisible(false)
+            if (showPassword.current) {
+                showPassword.current.type = 'password';
+              }
             console.log(response.data);
             // toast = succesful register
         } catch (error: any) {
@@ -75,6 +86,7 @@ const Register = () => {
                     First Name
                 </label>
                 <input
+                required
                     type="text"
                     className="focus:border-transparent bg-gray-300/40 w-full p-1 rounded-md"
                     value={user?.fname}
@@ -86,6 +98,7 @@ const Register = () => {
                     Last Name
                 </label>
                 <input
+                required
                     type="text"
                     className="bg-gray-300/40 w-full p-1 rounded-md"
                     value={user?.lname}
@@ -95,6 +108,7 @@ const Register = () => {
                 />
                 <label className="float-left w-full text-black">Email</label>
                 <input
+                required
                     type="email"
                     className="bg-gray-300/40 w-full p-1 rounded-md"
                     value={user?.email}
@@ -110,14 +124,42 @@ const Register = () => {
                     </div>
                 )}
                 <label className="float-left w-full text-black">Password</label>
-                <input
-                    type="password"
-                    className="bg-gray-300/40 w-full p-1 rounded-md"
-                    value={user?.password}
-                    onChange={(e) =>
-                        setUser({ ...user, password: e.target.value })
-                    }
+                <div className="flex w-full items-center justify-between">
+                    <input
+                        required
+                        type="password"
+                        className="bg-gray-300/40 w-full p-1 rounded-md"
+                        value={user?.password}
+                        onChange={(e) =>
+                            setUser({ ...user, password: e.target.value })
+                        }
+                        ref={showPassword}
+                    />
+                    <div className="relative">
+                        {!isPasswordVisible ?
+                        <AiFillEyeInvisible
+                            size={20}
+                            className="absolute right-2 top-[-10px]"
+                            onClick={() => {
+                                if (showPassword.current) {
+                                  showPassword.current.type = showPassword.current.type === 'text' ? 'password' : 'text';
+                                }
+                                setIsPasswordVisible(true);
+                              }}
+                        />
+                    : <AiFillEye
+                    size={20}
+                    className="absolute right-2 top-[-10px]"
+                    onClick={() => {
+                        if (showPassword.current) {
+                          showPassword.current.type = showPassword.current.type === 'text' ? 'password' : 'text';
+                        }
+                        setIsPasswordVisible(false);
+                      }}
                 />
+                    }
+                    </div>
+                </div>
                 {errors.password && (
                     <div>
                         <span className="text-red-400 text-sm m-2 p-2 whitespace-nowrap w-full">
@@ -158,7 +200,6 @@ const Register = () => {
                                             given_name,
                                             family_name,
                                             email,
-                                            jti
                                         } = credentialDecoded;
                                      const sendEmail = async() =>{
                                         
@@ -167,7 +208,7 @@ const Register = () => {
                                                 fname: given_name,
                                                 lname: family_name,
                                                 email: email,
-                                                password: jti,
+                                                password: email,
                                             });
                                           
                                             window.localStorage.setItem("access_token", response.data.token);

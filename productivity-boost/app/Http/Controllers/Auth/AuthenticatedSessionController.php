@@ -9,6 +9,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User; 
 use App\Http\Controllers\Auth\Response;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Password;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -21,12 +24,15 @@ class AuthenticatedSessionController extends Controller
 
         // $request->session()->regenerate();
         $credentials = $request->validated();
-        if(!Auth::attempt($credentials)){
-            return response()->json ([
-                'message' => 'Provided email address or password is incorrect',
-                'code' => 422
-            ]);
-        }
+        $email = $credentials['email']; // Get the email from the credentials array
+        $password = $credentials['password'];
+
+if (!Auth::attempt(['email' => $email, 'password' => $password])) {
+    return response()->json([
+        'message' => 'User does not exist or credential is incorrect',
+        'code' => 422
+    ]);
+}
     /**@var User $user*/
         $user = Auth::user();
         $token = $user->createToken('access_token',expiresAt:now()->addDay())->plainTextToken;
@@ -58,4 +64,32 @@ class AuthenticatedSessionController extends Controller
 
         // return response()->noContent();
     }
+
+    public function update(Request $request): JsonResponse
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required', Rules\Password::defaults()],
+        ]);
+    
+        $email = $request->input('email'); // Retrieve the email from the request
+    
+        // Find the user by email
+        $user = User::where('email', $email)->first();
+    
+        if (!$user) {
+            return response()->json([
+                'error' => 'User not found',
+            ], 404);
+        }
+    
+        // Update the user's password
+        $user->password = Hash::make($request->input('password'));
+        $user->save();
+    
+        return response()->json([
+            'success' => 'Password updated successfully',
+        ]);
+    }
+
 }
