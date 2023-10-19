@@ -4,9 +4,10 @@ import { modalController } from '@/hooks/modalController'
 import { Button } from './ui/button'
 import { useRef, useState } from 'react'
 import { axiosClient } from '@/axios/axios.client';
-import toast, { ToastBar } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { AiFillEye,AiFillEyeInvisible } from "react-icons/ai";
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 interface EmailPassProps{
   email:string;
   password:string;
@@ -30,7 +31,7 @@ const ForgotPassword = () => {
             modal.onCloseForgot();
         }
     };
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) =>{
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) =>{
       e.preventDefault()
       if(confirmPassword !== user.password){
         toast.error('Password does not match')
@@ -38,8 +39,8 @@ const ForgotPassword = () => {
       }  
       const {email, password} = user;
       try {
-       const response = axiosClient.post(`/forgot`,{email:email, password:password})
-       console.log(response)
+       const response = await axiosClient.post(`/forgot`,{email:email, password:password});
+        toast.success(response.data.success)
        setIsPasswordVisible(prevState => ({
         ...prevState,
         password: false, 
@@ -47,13 +48,17 @@ const ForgotPassword = () => {
       }));
       navigate('/')
       modal.onCloseForgot();
-      toast.success('Succesful update password')
+      // toast.success('Succesful update password')
       if (showPassword.current && showConfirmPassword.current) {
         showPassword.current.type = 'password';
         showConfirmPassword.current.type = 'password';
       }
-      } catch (error) {
+      } catch (error:any){
         console.log(error)
+        if (error.response?.status === 404) {
+     toast.error(error.response.data.error);
+        }
+   
       }
       
     }
