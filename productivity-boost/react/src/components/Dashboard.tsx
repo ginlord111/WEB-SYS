@@ -24,7 +24,7 @@ const Dashboard = () => {
   }
   return (
   <h1 className='text-[100px] font-bold text-black'>
-    THIS IS DASHBOARD
+  Functionalities to be Develop...
     <Button onClick={handleClick}>Log Out</Button>
     </h1>
   )

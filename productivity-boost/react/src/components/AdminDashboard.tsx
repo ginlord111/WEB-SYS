@@ -88,6 +88,7 @@ const filteredUsers = users.filter(user => {
     </Table>
 
    <Button onClick={handleClick}>Log Out</Button>
+   <span className="text-[100px] text-black">FUNCTION TO BE DEVELOP</span>
 </div>
   )
 }
