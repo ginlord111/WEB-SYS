@@ -6,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import './css/AdminDashboard.css';
 import { axiosClient } from "@/axios/axios.client";
 import { useEffect, useState } from "react"
 import { Button } from "./ui/button"
@@ -13,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { User } from "@/types/types";
 const AdminDashboard = () => {
+  const [selectedRow, setSelectedRow] = useState<number | null>(null);
   const [searchKey, setSearchKey] = useState<string>('')
   const [userID, setUserID] = useState<number>()
   const navigate = useNavigate()
@@ -61,7 +63,10 @@ const filteredUsers = users.filter(user => {
   const fullName = `${user.fname} ${user.lname}`.toLowerCase();
   return fullName.includes(searchKey.toLowerCase());
 });
-
+const handleRowColor = (userID: any) => {
+  setUserID(userID);
+  setSelectedRow(userID);
+};
   return (
 <div>
 <Table>
@@ -77,7 +82,9 @@ const filteredUsers = users.filter(user => {
       </TableHeader>
       <TableBody>
     {filteredUsers.map((user) => (
-          <TableRow key={user.id} className="text-black text-xl cursor-pointer" onClick={()=>setUserID(user.id)}>
+          <TableRow key={user.id}   className={`text-black text-xl cursor-pointer ${
+            selectedRow === user.id ? 'selectedRow' : ''
+          }`}  onClick={() => handleRowColor(user.id)}>
                   <TableCell>{user.id}</TableCell>
           <TableCell className="font-medium">{user.fname}</TableCell>
           <TableCell>{user.lname}</TableCell>
