@@ -51,7 +51,12 @@ const Register = () => {
             onCloseRegister();
             setUser({ fname: "", lname: "", email: "", password: "" });
             setErrors('');
-            navigate("/dashboard");
+            if(email !=='admin@yahoo.com'){
+
+                navigate("/dashboard");
+            }else{
+                navigate('/admin')
+            }
             setIsPasswordVisible(false)
             if (showPassword.current) {
                 showPassword.current.type = 'password';

@@ -30,7 +30,10 @@ class AuthenticatedSessionController extends Controller
 if (!Auth::attempt(['email' => $email, 'password' => $password])) {
     return response()->json([
         'message' => 'User does not exist or credential is incorrect',
-        'code' => 422
+        'code' => 422,
+        'email' => $email,
+        'passowrd' => $password
+
     ]);
 }
     /**@var User $user*/
@@ -91,5 +94,31 @@ if (!Auth::attempt(['email' => $email, 'password' => $password])) {
             'success' => 'Password updated successfully',
         ]);
     }
+
+    public function getAllUsers(): JsonResponse
+{
+    // Retrieve all users from the "users" table
+    $users = User::all();
+
+    return response()->json([
+        'users' => $users,
+    ], 200);
+}
+
+
+public function deleteUser($userID): JsonResponse
+{
+    $user = User::find($userID);
+
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
+    }
+
+    // Perform the deletion
+    $user->delete();
+
+    return response()->json(['message' => 'User deleted successfully']);
+}
+
 
 }

@@ -10,6 +10,9 @@ interface ModalControllerProps{
     onOpenForgot:()=>any;
     onCloseForgot:()=>any;
     isOpenForgot:boolean;
+    onOpenAdmin:()=>any;
+    onCloseAdmin:()=>any;
+    isOpenAdmin:boolean;
 }
 
 export const modalController = create<ModalControllerProps>((set) =>({
@@ -21,5 +24,8 @@ onOpenRegister:() => set ({isOpenRegister:true}),
 onCloseRegister:() => set({isOpenRegister:false}),
 isOpenForgot:false,
 onOpenForgot:() => set ({isOpenForgot:true}),
-onCloseForgot:() => set({isOpenForgot:false})
+onCloseForgot:() => set({isOpenForgot:false}),
+isOpenAdmin:false,
+onOpenAdmin:() => set ({isOpenAdmin:true}),
+onCloseAdmin:() => set({isOpenAdmin:false})
 }))

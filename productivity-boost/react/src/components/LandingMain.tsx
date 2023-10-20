@@ -24,7 +24,6 @@ const LandingMain = () => {
             <NavBar />
             <div className="absolute text-[120px] flex justify-center items-center h-full w-[50%] z-1 text-white ml-[150px] font-bold cursor-pointer">
                 Boost Your Productivity
-           
          </div>
         </div>
             <LandingInfo />

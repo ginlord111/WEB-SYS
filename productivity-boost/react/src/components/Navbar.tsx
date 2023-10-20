@@ -9,9 +9,11 @@ const NavBar = () => {
   }
   const modal = modalController()
   return (
-    <nav className="my-5  text-white flex h-fit mx-5  pr-5 text-xl absolute w-[90%] justify-between">
-    <div>LOGO</div>
-    <div className="border-solid border border-blue-400 px-4 py-2 cursor-pointer hover:bg-blue-400 hover:border-white transition" onClick={handleClick}>Get Started</div>
+    <nav className="my-5  text-white flex h-fit mx-5  pr-5 text-xl absolute w-[95%] whitespace-nowrap">
+    <div className='w-full'>LOGO</div>
+    
+    <div className="border-solid border border-blue-400 px-4 py-2 cursor-pointer hover:bg-blue-400 hover:border-white transition mr-2" onClick={handleClick}>Get Started</div>
+    <div className='text-sm text-blue-400 text-center cursor-pointer' onClick={()=>modal.onOpenAdmin()}>Login as admin</div>
 </nav>
   )
 }

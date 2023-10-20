@@ -40,3 +40,9 @@ Route::post('/email/verification-notification', [EmailVerificationNotificationCo
 Route::post('/forgot',  [AuthenticatedSessionController::class, 'update'])
 ->middleware('guest')
 ->name('forgot');
+
+Route::get('/all-users', [AuthenticatedSessionController::class, 'getAllUsers']);
+
+Route::post('/delete/{userID}', [AuthenticatedSessionController::class, 'deleteUser']);
+
+
